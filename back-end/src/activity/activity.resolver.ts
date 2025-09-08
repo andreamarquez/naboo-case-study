@@ -23,7 +23,7 @@ import { ContextWithJWTPayload } from 'src/auth/types/context';
 export class ActivityResolver {
   constructor(
     private readonly activityService: ActivityService,
-    private readonly userServices: UserService,
+    private readonly userServices: UserService, // should be userService (singular)
   ) {}
 
   @ResolveField(() => ID)
@@ -39,6 +39,7 @@ export class ActivityResolver {
 
   @Query(() => [Activity])
   async getActivities(): Promise<Activity[]> {
+    // Improvement: Add pagination and limit parameters
     return this.activityService.findAll();
   }
 
@@ -57,6 +58,7 @@ export class ActivityResolver {
 
   @Query(() => [String])
   async getCities(): Promise<string[]> {
+    // Improvement: Consider caching this result as cities don't change frequently
     const cities = await this.activityService.findCities();
     return cities;
   }
@@ -67,11 +69,14 @@ export class ActivityResolver {
     @Args({ name: 'activity', nullable: true }) activity?: string,
     @Args({ name: 'price', nullable: true, type: () => Int }) price?: number,
   ): Promise<Activity[]> {
+    // Improvement: Add input validation for city parameter
+    // Improvement: Add pagination parameters
     return this.activityService.findByCity(city, activity, price);
   }
 
   @Query(() => Activity)
   async getActivity(@Args('id') id: string): Promise<Activity> {
+    // Improvement: Add ID format validation
     return this.activityService.findOne(id);
   }
 
@@ -81,6 +86,7 @@ export class ActivityResolver {
     @Context() context: ContextWithJWTPayload,
     @Args('createActivityInput') createActivity: CreateActivityInput,
   ): Promise<Activity> {
+    // Good: Proper use of auth guards
     return this.activityService.create(context.jwtPayload.id, createActivity);
   }
 }

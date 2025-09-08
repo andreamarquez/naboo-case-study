@@ -38,3 +38,11 @@ export class Activity extends Document {
 }
 
 export const ActivitySchema = SchemaFactory.createForClass(Activity);
+
+// Optimize queries with Mongoose indexes
+// ActivitySchema.index({ owner: 1, createdAt: -1 }); // for findByUser
+// ActivitySchema.index({ createdAt: -1 }); // Latest activities, findLatest (Activity)
+// for Activities by city queries:
+// ActivitySchema.index({ city: 1, createdAt: -1 }); // City indexing with sort (newest first)
+// ActivitySchema.index({ city: 1, price: 1 }); // City + price filtering
+// ActivitySchema.index({ city: 1, name: 'text' }); // City + text search
