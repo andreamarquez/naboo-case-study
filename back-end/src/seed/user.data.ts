@@ -1,4 +1,4 @@
-import { User } from 'src/user/user.schema';
+import { UserRole } from 'src/user/enums/user-role.enum';
 
 export const user = {
   email: 'user1@test.fr',
@@ -12,5 +12,5 @@ export const admin = {
   password: 'admin',
   firstName: 'Admin',
   lastName: 'Boss',
-  role: 'admin' as User['role'],
+  role: UserRole.ADMIN,
 };

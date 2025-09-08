@@ -4,6 +4,7 @@ import { UserService } from './user.service';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { User } from './user.schema';
 import { Activity } from '../activity/activity.schema';
+import { UserRole } from './enums/user-role.enum';
 
 describe('UserResolver - Favourites', () => {
   let resolver: UserResolver;
@@ -32,6 +33,7 @@ describe('UserResolver - Favourites', () => {
       email: 'test@example.com',
       firstName: 'Test',
       lastName: 'User',
+      role: UserRole.USER,
     },
   };
 
