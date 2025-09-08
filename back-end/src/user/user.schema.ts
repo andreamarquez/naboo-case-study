@@ -3,6 +3,7 @@ import { Document } from 'mongoose';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import mongoose from 'mongoose';
 import { Activity } from '../activity/activity.schema';
+import { UserRole } from './enums/user-role.enum';
 
 @ObjectType()
 @Schema({ timestamps: true })
@@ -10,8 +11,9 @@ export class User extends Document {
   @Field(() => ID)
   id!: string;
 
-  @Prop({ required: true, enum: ['user', 'admin'], default: 'user' })
-  role!: 'user' | 'admin';
+  @Field()
+  @Prop({ required: true, enum: UserRole, default: UserRole.USER })
+  role!: UserRole;
 
   @Field()
   @Prop({ required: true })

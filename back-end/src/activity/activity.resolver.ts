@@ -18,6 +18,7 @@ import { Activity } from './activity.schema';
 import { CreateActivityInput } from './activity.inputs.dto';
 import { User } from 'src/user/user.schema';
 import { ContextWithJWTPayload } from 'src/auth/types/context';
+import { AdminOnly } from 'src/auth/decorators/admin-only.decorator';
 
 @Resolver(() => Activity)
 export class ActivityResolver {
@@ -40,6 +41,13 @@ export class ActivityResolver {
   @Query(() => [Activity])
   async getActivities(): Promise<Activity[]> {
     // Improvement: Add pagination and limit parameters
+    return this.activityService.findAll();
+  }
+
+  @Query(() => [Activity])
+  @UseGuards(AuthGuard)
+  @AdminOnly()
+  async getActivitiesWithDebugInfo(): Promise<Activity[]> {
     return this.activityService.findAll();
   }
 

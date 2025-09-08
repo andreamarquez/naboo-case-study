@@ -42,6 +42,7 @@ type Query {
   getActivities: [Activity!]!
   getActivitiesByCity(activity: String, city: String!, price: Int): [Activity!]!
   getActivitiesByUser: [Activity!]!
+  getActivitiesWithDebugInfo: [Activity!]!
   getActivity(id: String!): Activity!
   getCities: [String!]!
   getLatestActivities: [Activity!]!
@@ -79,4 +80,5 @@ type User {
   id: ID!
   lastName: String!
   password: String!
+  role: String!
 }

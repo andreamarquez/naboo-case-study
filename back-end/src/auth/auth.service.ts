@@ -37,8 +37,7 @@ export class AuthService {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
-      // Improvement: Add role to JWT payload for authorization
-      // role: user.role,
+      role: user.role,
     };
     return await this.jwtService.signAsync(payload);
   }
