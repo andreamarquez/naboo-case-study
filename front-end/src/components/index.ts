@@ -6,3 +6,6 @@ export * from "./Filters";
 export * from "./Form";
 export * from "./PageTitle";
 export * from "./Topbar";
+export * from "./FavouriteButton";
+export * from "./AuthPromptModal";
+export * from "./FavouritesList";

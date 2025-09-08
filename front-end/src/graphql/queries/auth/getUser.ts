@@ -7,6 +7,17 @@ const GetUser = gql`
       firstName
       lastName
       email
+      favouriteActivities {
+        id
+        name
+        city
+        price
+        description
+        owner {
+          firstName
+          lastName
+        }
+      }
     }
   }
 `;
