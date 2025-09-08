@@ -106,6 +106,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{ user, isLoading, handleSignin, handleSignup, handleLogout }}
+       // Improvement: This object is recreated every render
     >
       {children}
     </AuthContext.Provider>

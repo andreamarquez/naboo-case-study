@@ -37,6 +37,8 @@ export class AuthService {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      // Improvement: Add role to JWT payload for authorization
+      // role: user.role,
     };
     return await this.jwtService.signAsync(payload);
   }
@@ -49,8 +51,10 @@ export class AuthService {
   }: SignUpInput): Promise<User> {
     const user = await this.userService.findByEmail(email);
 
+    // Improvement: Use an error message, something like "email already exists"
     if (user) throw new UnauthorizedException();
 
+    // Improvement: Add password strength validation
     return this.userService.createUser({
       email,
       password,

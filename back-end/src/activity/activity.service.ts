@@ -11,6 +11,7 @@ export class ActivityService {
     private activityModel: Model<Activity>,
   ) {}
 
+  // Improvement: Add pagination to prevent performance issues with large datasets
   async findAll(): Promise<Activity[]> {
     return this.activityModel.find().sort({ createdAt: -1 }).exec();
   }
@@ -19,6 +20,7 @@ export class ActivityService {
     return this.activityModel.find().sort({ createdAt: -1 }).limit(3).exec();
   }
 
+  // Improvement: Add pagination for user activities
   async findByUser(userId: string): Promise<Activity[]> {
     return this.activityModel
       .find({ owner: userId })
@@ -28,11 +30,12 @@ export class ActivityService {
 
   async findOne(id: string): Promise<Activity> {
     const activity = await this.activityModel.findById(id).exec();
-    if (!activity) throw new NotFoundException();
+    if (!activity) throw new NotFoundException(); // Should use a descriptive error message
     return activity;
   }
 
   async findByIds(ids: string[]): Promise<Activity[]> {
+    // Improvement: Add limit to prevent responses that are too large
     return this.activityModel.find({ _id: { $in: ids } }).exec();
   }
 
@@ -44,6 +47,8 @@ export class ActivityService {
     return activity;
   }
 
+  // Improvement: Maybe Cache somehow the city list as it rarely changes
+  // on new city addition the cache should be refreshed
   async findCities(): Promise<string[]> {
     return this.activityModel.distinct('city').exec();
   }
@@ -53,6 +58,9 @@ export class ActivityService {
     activity?: string,
     price?: number,
   ): Promise<Activity[]> {
+    // Improvement: Add input validation and sanitization
+    // Improvement: Add pagination
+    // Good: Use of $and operator for complex filter queries
     return this.activityModel
       .find({
         $and: [

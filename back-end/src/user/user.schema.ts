@@ -23,6 +23,8 @@ export class User extends Document {
   @Prop({ required: true, unique: true })
   email!: string;
 
+  // Improvement: Vulnerability, the password should not be exposed in responses
+  // should remove @Field() decorator to fix it
   @Field()
   @Prop({ required: true })
   password!: string;
@@ -32,3 +34,8 @@ export class User extends Document {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+// Auth is one of the things that will happen most frequently
+// and less frequent (or maybe same) but still used, the role checks for admin functionality
+// UserSchema.index({ email: 1 }, { unique: true }); // Email lookup for auth
+// UserSchema.index({ role: 1 }); // Admin functionality
