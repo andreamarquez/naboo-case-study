@@ -39,9 +39,9 @@ export function AuthPromptModal({
       }}
     >
       <Stack spacing="md">
-        <Text size="sm" color="dimmed" align="center">
-          {message}
-        </Text>
+          <Text size="sm" color="dimmed" align="center">
+            {message}
+          </Text>
 
         <Stack spacing="sm">
           <Button 
@@ -65,7 +65,7 @@ export function AuthPromptModal({
         <Divider />
 
         <Text size="xs" color="dimmed" align="center">
-          Vous serez redirigé pour compléter l'authentification
+          Vous serez redirigé pour compléter l&apos;authentification
         </Text>
       </Stack>
     </Modal>

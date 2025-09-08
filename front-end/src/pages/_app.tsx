@@ -1,5 +1,6 @@
 import { Topbar } from "@/components";
 import { AuthProvider, SnackbarProvider } from "@/contexts";
+import { DebugProvider } from "@/contexts/debugContext";
 import { routes } from "@/routes";
 import { graphqlClient } from "@/graphql/apollo";
 import { mantineTheme } from "@/utils";
@@ -13,10 +14,12 @@ export default function App({ Component, pageProps }: AppProps) {
       <SnackbarProvider>
         <ApolloProvider client={graphqlClient}>
           <AuthProvider>
-            <Topbar routes={routes} />
-            <Container>
-              <Component {...pageProps} />
-            </Container>
+            <DebugProvider>
+              <Topbar routes={routes} />
+              <Container>
+                <Component {...pageProps} />
+              </Container>
+            </DebugProvider>
           </AuthProvider>
         </ApolloProvider>
       </SnackbarProvider>

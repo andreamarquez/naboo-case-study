@@ -1,8 +1,9 @@
 import { ActivityFragment } from "@/graphql/generated/types";
-import { useGlobalStyles } from "@/utils";
+import { useGlobalStyles, formatCreationDate } from "@/utils";
 import { Badge, Button, Card, Grid, Group, Image, Text, Box } from "@mantine/core";
 import Link from "next/link";
 import { FavouriteButton } from "./FavouriteButton";
+import { useDebugMode } from "@/hooks";
 
 interface ActivityProps {
   activity: ActivityFragment;
@@ -10,6 +11,7 @@ interface ActivityProps {
 
 export function Activity({ activity }: ActivityProps) {
   const { classes } = useGlobalStyles();
+  const { canUseDebugMode } = useDebugMode();
 
   return (
     <Grid.Col span={4}>
@@ -52,6 +54,12 @@ export function Activity({ activity }: ActivityProps) {
         <Text size="sm" color="dimmed" className={classes.ellipsis}>
           {activity.description}
         </Text>
+
+        {canUseDebugMode && (
+          <Text size="xs" color="dimmed" mt="xs">
+            {formatCreationDate(activity.createdAt)}
+          </Text>
+        )}
 
         <Link href={`/activities/${activity.id}`} className={classes.link}>
           <Button variant="light" color="blue" fullWidth mt="md" radius="md">

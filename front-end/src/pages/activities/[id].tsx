@@ -1,5 +1,7 @@
 import { PageTitle } from "@/components";
 import { graphqlClient } from "@/graphql/apollo";
+import { useDebugMode } from "@/hooks";
+import { formatCreationDate } from "@/utils";
 import {
   GetActivityQuery,
   GetActivityQueryVariables,
@@ -31,6 +33,7 @@ export const getServerSideProps: GetServerSideProps<
 
 export default function ActivityDetails({ activity }: ActivityDetailsProps) {
   const router = useRouter();
+  const { canUseDebugMode } = useDebugMode();
 
   return (
     <>
@@ -62,6 +65,11 @@ export default function ActivityDetails({ activity }: ActivityDetailsProps) {
             <Text size="sm" color="dimmed">
               Ajouté par {activity.owner.firstName} {activity.owner.lastName}
             </Text>
+            {canUseDebugMode && (
+              <Text size="xs" color="dimmed">
+                {formatCreationDate(activity.createdAt)}
+              </Text>
+            )}
           </Flex>
         </Grid.Col>
       </Grid>

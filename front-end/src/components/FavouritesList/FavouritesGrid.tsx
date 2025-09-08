@@ -6,11 +6,10 @@ import { DraggableActivity } from './DraggableActivity';
 
 interface FavouritesGridProps {
   activities: ActivityFragment[];
-  isDragMode?: boolean;
   onReorder?: (orderedIds: string[]) => Promise<void>;
 }
 
-export function FavouritesGrid({ activities, isDragMode = false, onReorder }: FavouritesGridProps) {
+export function FavouritesGrid({ activities, onReorder }: FavouritesGridProps) {
   const handleDragEnd = async (event: DragEndEvent) => {
     const { active, over } = event;
 
