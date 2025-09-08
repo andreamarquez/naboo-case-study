@@ -9,3 +9,4 @@ export * from "./Topbar";
 export * from "./FavouriteButton";
 export * from "./AuthPromptModal";
 export * from "./FavouritesList";
+export * from "./AdminBadge";

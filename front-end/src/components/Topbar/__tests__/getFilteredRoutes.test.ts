@@ -10,10 +10,13 @@ interface CheckRouteAccessTest {
 }
 
 const user: GetUserQuery["getMe"] = {
+  __typename: "User",
   id: "user1",
   email: "user1@test.fr",
   firstName: "john",
   lastName: "doe",
+  role: "user",
+  favouriteActivities: [],
 };
 
 describe("la fonction checkRouteAccess", () => {

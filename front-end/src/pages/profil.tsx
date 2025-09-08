@@ -1,8 +1,8 @@
-import { PageTitle, FavouritesList } from "@/components";
+import { PageTitle, FavouritesList, AdminBadge } from "@/components";
 import { graphqlClient } from "@/graphql/apollo";
 import { withAuth } from "@/hocs";
 import { useAuth } from "@/hooks";
-import { Avatar, Flex, Text, Stack, Divider } from "@mantine/core";
+import { Avatar, Flex, Text, Stack, Divider, Card, Title, Group } from "@mantine/core";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 
@@ -14,7 +14,7 @@ interface ProfileProps {
 }
 
 const Profile = (props: ProfileProps) => {
-  const { user } = useAuth();
+  const { user, isAdmin } = useAuth();
 
   return (
     <>
@@ -31,9 +31,12 @@ const Profile = (props: ProfileProps) => {
             {user?.lastName[0]}
           </Avatar>
           <Flex direction="column">
-            <Text weight={500} size="lg">
-              {user?.firstName} {user?.lastName}
-            </Text>
+            <Group spacing="sm" align="center">
+              <Text weight={500} size="lg">
+                {user?.firstName} {user?.lastName}
+              </Text>
+              {isAdmin && <AdminBadge />}
+            </Group>
             <Text color="dimmed">{user?.email}</Text>
           </Flex>
         </Flex>

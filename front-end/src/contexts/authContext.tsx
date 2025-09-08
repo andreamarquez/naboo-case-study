@@ -15,13 +15,15 @@ import Signin from "@/graphql/mutations/auth/signin";
 import Signup from "@/graphql/mutations/auth/signup";
 import GetUser from "@/graphql/queries/auth/getUser";
 import { useSnackbar } from "@/hooks";
-import { useLazyQuery, useMutation } from "@apollo/client";
+import { useLazyQuery, useMutation, useApolloClient } from "@apollo/client";
 import { useRouter } from "next/router";
 import { createContext, useEffect, useState } from "react";
 
 interface AuthContextType {
   user: GetUserQuery["getMe"] | null;
   isLoading: boolean;
+  isAuthenticated: boolean;
+  isAdmin: boolean;
   handleSignin: (input: SignInInput) => Promise<void>;
   handleSignup: (input: SignUpInput) => Promise<void>;
   handleLogout: () => Promise<void>;
@@ -30,6 +32,8 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType>({
   user: null,
   isLoading: false,
+  isAuthenticated: false,
+  isAdmin: false,
   handleSignin: () => Promise.resolve(),
   handleSignup: () => Promise.resolve(),
   handleLogout: () => Promise.resolve(),
@@ -44,8 +48,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<GetUserQuery["getMe"] | null>(null);
   const router = useRouter();
+  const apolloClient = useApolloClient();
 
-  const [getUser] = useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUser);
+  const [getUser] = useLazyQuery<GetUserQuery, GetUserQueryVariables>(GetUser, {
+    fetchPolicy: 'network-only' // Always fetch fresh data, don't use cache
+  });
   const [signin] = useMutation<SigninMutation, SigninMutationVariables>(Signin);
   const [signup] = useMutation<SignupMutation, SignupMutationVariables>(Signup);
   const [logout] = useMutation<LogoutMutation, LogoutMutationVariables>(Logout);
@@ -60,7 +67,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     } else {
       setIsLoading(false);
     }
-  }, [user]);
+  }, [user, getUser]);
 
   const handleSignin = async (input: SignInInput) => {
     try {
@@ -68,7 +75,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       const response = await signin({ variables: { signInInput: input } });
       const token = response.data?.login?.access_token || "";
       localStorage.setItem("token", token);
-      await getUser().then((res) => setUser(res.data?.getMe || null));
+      
+      // Clear cache and fetch fresh user data
+      await apolloClient.clearStore();
+      const userResponse = await getUser();
+      setUser(userResponse.data?.getMe || null);
       router.push("/profil");
     } catch (err) {
       snackbar.error("Une erreur est survenue");
@@ -95,6 +106,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       await logout();
       localStorage.removeItem("token");
       setUser(null);
+      // Clear Apollo cache to remove all user data
+      await apolloClient.clearStore();
       router.push("/");
     } catch (err) {
       snackbar.error("Une erreur est survenue");
@@ -103,9 +116,21 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     }
   };
 
+  // Computed properties for auth state
+  const isAuthenticated = !!user;
+  const isAdmin = user?.role === 'admin';
+
   return (
     <AuthContext.Provider
-      value={{ user, isLoading, handleSignin, handleSignup, handleLogout }}
+      value={{ 
+        user, 
+        isLoading, 
+        isAuthenticated, 
+        isAdmin, 
+        handleSignin, 
+        handleSignup, 
+        handleLogout 
+      }}
        // Improvement: This object is recreated every render
     >
       {children}
